@@ -92,15 +92,11 @@ def processUploadFiles(filename,filesize,files,update,bot,message,thread=None,jd
                           if user_info['uploadtype'] == 'draft':
                              fileid,resp = client.upload_file_draft(f,progressfunc=uploadFile,args=(bot,message,originalfile,thread),tokenize=tokenize)
                              draftlist.append(resp)
-                          if user_info['uploadtype'] == 'perfil':
-                             fileid,resp = client.upload_file_perfil(f,progressfunc=uploadFile,args=(bot,message,originalfile,thread),tokenize=tokenize)
-                             draftlist.append(resp)
+                             client = draftlist
                           if user_info['uploadtype'] == 'blog':
                              fileid,resp = client.upload_file_blog(f,progressfunc=uploadFile,args=(bot,message,originalfile,thread),tokenize=tokenize)
                              draftlist.append(resp)
-                          if user_info['uploadtype'] == 'calendar':
-                             fileid,resp = client.upload_file_calendar(f,progressfunc=uploadFile,args=(bot,message,originalfile,thread),tokenize=tokenize)
-                             draftlist.append(resp)
+                             client = draftlist
                           iter += 1
                           if iter>=10:
                               break
@@ -109,7 +105,7 @@ def processUploadFiles(filename,filesize,files,update,bot,message,thread=None,jd
                     try:
                         client.saveEvidence(evidence)
                     except:pass
-                return draftlist
+                return client
             else:
                 bot.editMessageText(message,'❌Error En La Pagina❌')
         elif cloudtype == 'cloud':
@@ -135,7 +131,7 @@ def processUploadFiles(filename,filesize,files,update,bot,message,thread=None,jd
                return filesdata
         return None
     except Exception as ex:
-        bot.editMessageText(message,f'❌Error {str(ex)}❌')
+        bot.editMessageText(message,'❌Error En La Pagina❌')
 
 
 def processFile(update,bot,message,file,thread=None,jdb=None):
@@ -180,7 +176,7 @@ def processFile(update,bot,message,file,thread=None,jdb=None):
                            findex+=1
                     client.logout()
                 except:pass
-            if getUser['uploadtype'] == 'draft' or getUser['uploadtype'] == 'blog' or getUser['uploadtype'] == 'calendar':
+            if getUser['uploadtype'] == 'draft' or getUser['uploadtype'] == 'blog':
                for draft in client:
                    files.append({'name':draft['file'],'directurl':draft['url']})
         else:
